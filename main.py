@@ -475,7 +475,7 @@ class MainApp(MDApp, Screen):
         layout.add_widget(popupLabel)
         layout.add_widget(closeButton)
 
-        popup = Popup(title='Напоминание', content=layout,
+        popup = Popup(title='Дата', content=layout,
                       auto_dismiss=False)
         popup.open()
         closeButton.bind(on_press=popup.dismiss)
