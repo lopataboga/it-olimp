@@ -1,38 +1,75 @@
-import requests
-import json
+from kivy.lang import Builder
+from kivy.uix.boxlayout import BoxLayout
+from kivy.properties import ObjectProperty
+
+from kivymd.app import MDApp
+
+KV = '''
+<ContentNavigationDrawer>:
+
+    ScrollView:
+
+        MDList:
+
+            OneLineListItem:
+                text: "Screen 1"
+                on_press:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "scr 1"
+
+            OneLineListItem:
+                text: "Screen 2"
+                on_press:
+                    root.nav_drawer.set_state("close")
+                    root.screen_manager.current = "scr 2"
 
 
-class GardenCommunication():
-    def __init__(self):
-        pass
+Screen:
 
-    def tempSensor(self, number):
-        response = requests.get(f"https://dt.miet.ru/ppo_it/api/temp_hum/{number}", headers={"X-Auth-Token": atoken})
-        return response.json()['id'], response.json()['humidity'],  response.json()['temperature']
+    MDToolbar:
+        id: toolbar
+        pos_hint: {"top": 1}
+        elevation: 10
+        title: "MDNavigationDrawer"
+        left_action_items: [["menu", lambda x: nav_drawer.set_state("open")]]
 
-    def humSensor(self, number):
-        response = requests.get(f"https://dt.miet.ru/ppo_it/api/hum/{number}", headers={"X-Auth-Token": atoken})
-        return response.json()['id'], response.json()['humidity']
+    NavigationLayout:
+        x: toolbar.height
 
-    def windowOpen(self, state_value):
-        response = requests.patch("https://dt.miet.ru/ppo_it/api/fork_drive", params ={"state": state_value})
-        return response.status_code
+        ScreenManager:
+            id: screen_manager
 
-    def waterGarden(self, device_id, state_value):
-        response = requests.request('patch', "https://dt.miet.ru/ppo_it/api/watering", params ={"id": device_id, "state": state_value}, headers={"X-Auth-Token": atoken})
-        return response.status_code
+            Screen:
+                name: "scr 1"
 
-    def globalWaterGarden(self, state_value):
-        response = requests.patch("https://dt.miet.ru/ppo_it/api/total_hum", params={"state": state_value})
-        return response.status_code
+                MDLabel:
+                    text: "Screen 1"
+                    halign: "center"
 
-class MainApp():
-    def __init__(self):
-        atoken = "efegr"
+            Screen:
+                name: "scr 2"
 
-    def run(self):
-        print(GardenCommunication().windowOpen(1))
-        pass
+                MDLabel:
+                    text: "Screen 2"
+                    halign: "center"
 
-if __name__ == "__main__":
-    MainApp().run()
+        MDNavigationDrawer:
+            id: nav_drawer
+
+            ContentNavigationDrawer:
+                screen_manager: screen_manager
+                nav_drawer: nav_drawer
+'''
+
+
+class ContentNavigationDrawer(BoxLayout):
+    screen_manager = ObjectProperty()
+    nav_drawer = ObjectProperty()
+
+
+class TestNavigationDrawer(MDApp):
+    def build(self):
+        return Builder.load_string(KV)
+
+
+TestNavigationDrawer().run()
