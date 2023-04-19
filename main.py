@@ -414,6 +414,7 @@ class MainApp(MDApp, Screen):
     def build(self):
         self.theme_cls.primary_palette = "Pink"
         self.theme_cls.theme_style = "Dark"
+        self.title = 'Умная теплица'
 
         self.sm.add_widget(MainScreen())
         self.sm.add_widget(TabelScreen())
@@ -466,7 +467,7 @@ class MainApp(MDApp, Screen):
         self.sm.current = "Table"
 
     def popup(self, text1):
-        layout = GridLayout(cols=1, padding=10)
+        layout = GridLayout(cols=1, padding=5)
 
         popupLabel = MDLabel(
             text=f"ср. влж. возуха: {average_hum_air} огр. влж. воздуха: {min_hum_air}\nср. температура: {average_temp} огр. температура: {min_temp}")
